@@ -1,0 +1,3 @@
+Install jython protobuf==3.17 via easy_install and copy to ghidra site packages folder
+patch protobuf to remove unnecessary surrogate check as it is not supported in Jython
+compile descriptor_pb2 to pyc because it is too large

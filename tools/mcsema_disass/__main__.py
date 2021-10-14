@@ -184,12 +184,27 @@ def main():
         "--rebase", args.rebase
       ]
       subprocess.run(pass_args)
+    elif 'ghidra' in args.disassembler:
+      import ghidra.disass as disass
+      ret = disass.execute(args, fixed_command_args)
+
+      if not os.path.isfile(args.output):
+        sys.stderr.write("Could not generate a CFG. Try using the --log_file option to see an error log.\n")
+        ret = 1
+
+      # The disassembler script probably threw an exception
+      if 0 == os.path.getsize(args.output):
+        sys.stderr.write("Generated an invalid (zero-sized) CFG. Please use the --log_file option to see an error log.\n")
+        # remove the zero-sized file
+        os.unlink(args.output)
+        ret = 1
     else:
       arg_parser.error("{} passed to --disassembler is not known.".format(
           args.disassembler))
 
   finally:
     shutil.rmtree(workspace_dir)
+    pass
 
   return ret
 
