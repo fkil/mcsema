@@ -598,7 +598,8 @@ def recover_region_variables(M, S, seg_ea, seg_end_ea, exported_vars):
     seg = getSegmentContaining(seg_ea)
     is_code_seg = seg.isExecute()
 
-    addressSet = currentProgram.getAddressFactory().getAddressSet(seg_ea, seg_end_ea)
+    # subtract 1 since it's inclusive
+    addressSet = currentProgram.getAddressFactory().getAddressSet(seg_ea, seg_end_ea.subtract(1))
     symbolTypes = [SymbolType.GLOBAL, SymbolType.GLOBAL_VAR, SymbolType.LABEL]
 
     assert not is_segment_external(seg)
@@ -631,7 +632,7 @@ def recover_region_cross_references(M, S, seg_ea, seg_end_ea):
     seg_name = seg.getName()
     has_func_pointers = segment_contains_external_function_pointers(seg)
 
-    addressSet = currentProgram.getAddressFactory().getAddressSet(seg_ea, seg_end_ea)
+    addressSet = currentProgram.getAddressFactory().getAddressSet(seg_ea, seg_end_ea.subtract(1))
     for refAddr in wrapJavaIterator(currentProgram.getReferenceManager().getReferenceSourceIterator(addressSet, True)):
         if is_runtime_external_data_reference(refAddr):
             continue
@@ -683,7 +684,7 @@ def recover_region(M, region_name, region_ea, region_end_ea, exported_vars):
 
     S = M.segments.add()
     S.ea = region_ea.getOffset()
-    S.data = read_bytes_slowly(region_ea, region_end_ea)
+    S.data = read_bytes_slowly(region_ea, region_end_ea.subtract(1))
     S.read_only = (seg.getPermissions() & MemoryBlock.WRITE) == 0
     S.is_external = is_segment_external(seg)
     S.is_thread_local = is_tls_segment(seg)
