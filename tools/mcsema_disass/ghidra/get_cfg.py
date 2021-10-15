@@ -166,8 +166,6 @@ def parse_os_defs_file(df):
             func = getFunctionByName(fname)
 
             EMAP[fname] = (int(args), realconv, ret, sign)
-            if ret == 'Y':
-                noreturn_external_function(fname, int(args), realconv, ret, sign)
 
     df.close()
 
