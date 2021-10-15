@@ -34,10 +34,6 @@ import pprint
 # Bring in utility libraries.
 from util import *
 import util
-from table import *
-from flow import *
-from refs import *
-from segment import *
 from exception import *
 
 
@@ -260,16 +256,7 @@ def is_thunk_by_flags(ea):
 
     return True, targ_ea
 
-
-_REFERENCE_OPERAND_TYPE = {
-    Reference.IMMEDIATE: CFG_pb2.CodeReference.ImmediateOperand,
-    Reference.DISPLACEMENT: CFG_pb2.CodeReference.MemoryDisplacementOperand,
-    Reference.MEMORY: CFG_pb2.CodeReference.MemoryOperand,
-    Reference.CODE: CFG_pb2.CodeReference.ControlFlowOperand,
-}
-
 def reference_operand_type(ref):
-    global _REFERENCE_OPERAND_TYPE
     if ref.getReferenceType().isFlow():
         return CFG_pb2.CodeReference.ControlFlowOperand
     if ref.isMemoryReference():
@@ -995,8 +982,6 @@ def recover_module(entrypoint, gvar_infile = None):
 
     if RECOVER_EHTABLE:
         recover_exception_table()
-
-    process_segments(PIE_MODE)
 
     funcs = get_functions()
 
