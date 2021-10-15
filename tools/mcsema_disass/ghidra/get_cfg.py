@@ -644,7 +644,22 @@ def recover_region_cross_references(M, S, seg_ea, seg_end_ea):
         for ref in currentProgram.getReferenceManager().getReferencesFrom(refAddr):
             target_ea = ref.getToAddress()
 
-            xref_width = max_xref_width
+            data = getDataContaining(refAddr)
+            if data:
+                # If it is hierarchical data, get the child component's length
+                while data.getNumComponents():
+                    data = data.getComponentAt(refAddr.subtract(data.getAddress()))
+
+                assert data.getAddress() == refAddr
+                xref_width = data.getLength()
+                xref_width = min(max(xref_width, 4), max_xref_width)
+            else:
+                xref_width = max_xref_width
+
+            if xref_width < min_xref_width:
+                DEBUG("WARNING: Ingorning {}-byte item that looks like at reference from {:x} to {:x}; it needs to be at least {} bytes".format(
+                    xref_width, ea.getOffset(), target_ea.getOffset(), min_xref_width))
+                continue
 
             X = S.xrefs.add()
             X.ea = refAddr.getOffset()

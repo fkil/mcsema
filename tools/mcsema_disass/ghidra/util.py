@@ -368,6 +368,9 @@ def is_referenced(ea):
 def getDataAt(ea):
     return currentProgram.getListing().getDataAt(ea)
 
+def getDataContaining(ea):
+    return currentProgram.getListing().getDataContaining(ea)
+
 def getRealExternalNameOfReloc(reloc):
     symb = getSymbolAt(reloc.getAddress())
 
