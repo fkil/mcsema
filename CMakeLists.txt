@@ -134,6 +134,7 @@ add_custom_command(
   TARGET protobuf_python_module_ida POST_BUILD
   DEPENDS {PROJECT_PROTOBUFPYTHONMODULE}
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_PROTOBUFPYTHONMODULE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/mcsema_disass/ida7
+  COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_PROTOBUFPYTHONMODULE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/mcsema_disass/ghidra
 )
 
 # this is needed for the #include directives with absolutes paths to work correctly; it must
@@ -170,6 +171,15 @@ set(MCSEMA_PYTHON_SOURCES
     tools/mcsema_disass/ida7/table.py
     tools/mcsema_disass/ida7/util.py
     tools/mcsema_disass/ida7/x86_util.py
+    tools/mcsema_disass/ghidra/__init__.py
+    tools/mcsema_disass/ghidra/anvill_compat.py
+    tools/mcsema_disass/ghidra/arm_util.py
+    tools/mcsema_disass/ghidra/CFG_pb2.py
+    tools/mcsema_disass/ghidra/disass.py
+    tools/mcsema_disass/ghidra/exception.py
+    tools/mcsema_disass/ghidra/get_cfg.py
+    tools/mcsema_disass/ghidra/util.py
+    tools/mcsema_disass/ghidra/x86_util.py
 )
 
 if(MCSEMA_INSTALL_PYTHON3_LIBS)

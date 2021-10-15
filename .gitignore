@@ -44,6 +44,9 @@ tools/regtrace/obj-intel64/*
 *.nam
 *.til
 
+#Ghidra
+*.class
+
 third_party/*
 generated/*
 cxxcommon
