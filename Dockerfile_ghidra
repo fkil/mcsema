@@ -102,6 +102,8 @@ ARG LLVM_VERSION
 # Allow for mounting of local folder
 RUN mkdir -p /mcsema/local
 
+RUN adduser mcsema
+USER mcsema
 
 
 COPY --from=build ${LIBRARIES} ${LIBRARIES}
