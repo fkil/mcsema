@@ -1,0 +1,33 @@
+--- /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages_backup/protobuf-3.17.0-py2.7.egg/google/protobuf/internal/decoder.py	2021-10-18 15:44:04.579624411 +0200
++++ /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages_backup/protobuf-3.17.0-py2.7.egg/google/protobuf/internal/decoder.py	2021-10-18 16:00:07.803162605 +0200
+@@ -89,7 +89,7 @@
+   long = int
+ else:
+   import re    # pylint: disable=g-import-not-at-top
+-  _SURROGATE_PATTERN = re.compile(six.u(r'[\ud800-\udfff]'))
++  #_SURROGATE_PATTERN = re.compile(six.u(r'[\ud800-\udfff]'))
+ 
+ from google.protobuf.internal import containers
+ from google.protobuf.internal import encoder
+@@ -575,14 +575,14 @@
+       e.reason = '%s in field: %s' % (e, key.full_name)
+       raise
+ 
+-    if is_strict_utf8 and six.PY2 and sys.maxunicode > _UCS2_MAXUNICODE:
++    #if is_strict_utf8 and six.PY2 and sys.maxunicode > _UCS2_MAXUNICODE:
+       # Only do the check for python2 ucs4 when is_strict_utf8 enabled
+-      if _SURROGATE_PATTERN.search(value):
+-        reason = ('String field %s contains invalid UTF-8 data when parsing'
+-                  'a protocol buffer: surrogates not allowed. Use'
+-                  'the bytes type if you intend to send raw bytes.') % (
+-                      key.full_name)
+-        raise message.DecodeError(reason)
++      #if _SURROGATE_PATTERN.search(value):
++      #  reason = ('String field %s contains invalid UTF-8 data when parsing'
++      #            'a protocol buffer: surrogates not allowed. Use'
++      #            'the bytes type if you intend to send raw bytes.') % (
++      #                key.full_name)
++      #  raise message.DecodeError(reason)
+ 
+     return value
+ 

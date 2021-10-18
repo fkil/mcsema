@@ -14,5 +14,5 @@ fi
 INPUT=$1
 OUTPUT=$2
 
-docker run --rm -it --entrypoint=mcsema-disass --ipc=host -v "$(pwd)":/mcsema/local -v /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/:/opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/ mcsema:llvm${LLVM}-ubuntu${UBUNTU}-${ARCH} --disassembler /opt/ghidra/support/analyzeHeadless --arch ${ARCH} --os ${OS} --log_file /mcsema/local/mcsema_disass.log --output /mcsema/local/disass.cfg --binary /mcsema/local/${INPUT} \
+docker run --rm -it --entrypoint=mcsema-disass --ipc=host -v "$(pwd)":/mcsema/local mcsema:llvm${LLVM}-ubuntu${UBUNTU}-${ARCH} --disassembler /opt/ghidra/support/analyzeHeadless --arch ${ARCH} --os ${OS} --log_file /mcsema/local/mcsema_disass.log --output /mcsema/local/disass.cfg --binary /mcsema/local/${INPUT} \
 && docker run --rm -it --ipc=host -v "$(pwd)":/mcsema/local mcsema:llvm${LLVM}-ubuntu${UBUNTU}-${ARCH} --output /mcsema/local/${OUTPUT} --arch ${ARCH} --os ${OS} --cfg /mcsema/local/disass.cfg

@@ -19,7 +19,7 @@ FROM ${BUILD_BASE} as base
 ARG UBUNTU_VERSION
 ARG LIBRARIES
 RUN apt-get update && \
-    apt-get install -qqy --no-install-recommends python3 python3-pip python3-setuptools python3-six python3.8 zlib1g curl ca-certificates openjdk-11-jdk wget unzip && \
+    apt-get install -qqy --no-install-recommends python3 python3-pip python3-setuptools python3-six python3.8 zlib1g curl ca-certificates openjdk-11-jdk wget unzip python python-setuptools patch && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Ghidra
@@ -34,6 +34,21 @@ RUN GHIDRALINK=`wget -O - --quiet  https://github.com/NationalSecurityAgency/ghi
     unzip /opt/$GHIDRA -d /opt > /dev/null && \
     mv /opt/$GHIDRADIR /opt/ghidra && \
     rm -rf /opt/$GHIDRA
+
+# Install protobuf for Ghidra
+# Install protobuf per easy_install to local python2, then copy site-packages to ghidra
+RUN python2 -m easy_install "protobuf == 3.17"
+RUN cp -R /usr/local/lib/python2.7/dist-packages/* /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/
+RUN ls -la /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/ 
+
+# Patch and compile protobuf
+
+ADD tools/mcsema_disass/ghidra/install/protobuf_utf.patch /tmp/
+RUN ls -la /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/protobuf-3.17.0-py2.7-linux-x86_64.egg
+RUN patch /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/protobuf-3.17.0-py2.7-linux-x86_64.egg/google/protobuf/internal/decoder.py /tmp/protobuf_utf.patch
+RUN python -m py_compile /opt/ghidra/Ghidra/Features/Python/data/jython-2.7.2/Lib/site-packages/protobuf-3.17.0-py2.7-linux-x86_64.egg/google/protobuf/descriptor_pb2.py 
+
+
 
 # Build-time dependencies go here
 FROM trailofbits/cxx-common-vcpkg-builder-ubuntu:${UBUNTU_VERSION} as deps
